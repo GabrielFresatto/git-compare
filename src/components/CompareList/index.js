@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types';
 import { Repo, Container } from './styles';
 
 const CompareList = (props) => {
-  const { repositories } = props;
+  const { repositories, onDelete } = props;
   return (
     <Container>
       {repositories.map(repo => (
@@ -31,6 +31,9 @@ const CompareList = (props) => {
               <small>last commit</small>
             </li>
           </ul>
+          <button type="button" title="Deletar" onClick={() => onDelete(repo)}>
+            <i className="fa fa-trash" />
+          </button>
         </Repo>
       ))}
 
@@ -52,6 +55,7 @@ CompareList.propTypes = {
     open_issues_count: PropTypes.number,
     pushed_at: PropTypes.string,
   })).isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 

@@ -4,6 +4,7 @@ export const Repo = styled.div`
   background: #fff;
   margin: 10px 10px;
   width: 22.8%;
+  position: relative;
 
   header {
     display: flex;
@@ -43,6 +44,24 @@ export const Repo = styled.div`
       &:nth-child(2n - 1) {
         background: #f5f5f5;
       }
+    }
+  }
+
+  button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 10px;
+    border-radius: 17px;
+    border: none;
+    box-shadow: -1px 1px 2px 0px #00000063;
+    background: #ea5656;
+    color: #fff;
+    transition: .2s;
+    cursor: pointer;
+
+    &:hover {
+      background: #f52e2e;
     }
   }
 `;

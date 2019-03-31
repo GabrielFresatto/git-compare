@@ -9,12 +9,15 @@ class Main extends Component {
   state = {
     repositoryError: false,
     repositorieInput: '',
-    repositories: [],
+    repositories: (window.localStorage.getItem('repos')) ? JSON.parse(window.localStorage.getItem('repos')) : [],
     loading: false,
   }
 
   handlerAddRepository = async (e) => {
     const { repositorieInput, repositories } = this.state;
+
+    // Array com
+    const localStorageRepos = repositories;
 
     e.preventDefault();
 
@@ -25,9 +28,15 @@ class Main extends Component {
 
       // Cria um campo chamado last commit com a data formatada
       response.data.lastCommit = moment(response.data.pushed_at).fromNow();
+
+      // Salva o novo registro no local storage
+      localStorageRepos.push(response.data);
+      window.localStorage.removeItem('repos');
+      window.localStorage.setItem('repos', JSON.stringify(localStorageRepos));
+
       this.setState({
         repositorieInput: '',
-        repositories: [...repositories, response.data],
+        repositories: localStorageRepos,
         repositoryError: false,
       });
     } catch (err) {
@@ -35,6 +44,16 @@ class Main extends Component {
     } finally {
       this.setState({ loading: false });
     }
+  }
+
+  removeRepo = (repositorio) => {
+    this.setState(state => ({
+      repositories: state.repositories.filter(repo => repo.id !== repositorio.id),
+    }), () => {
+      window.localStorage.removeItem('repos');
+      // eslint-disable-next-line react/destructuring-assignment
+      window.localStorage.setItem('repos', JSON.stringify(this.state.repositories));
+    });
   }
 
   render() {
@@ -58,7 +77,7 @@ class Main extends Component {
           <button type="submit">{loading ? <i className="fa fa-spinner fa-pulse" /> : 'OK'}</button>
         </Form>
 
-        <CompareList repositories={repositories} />
+        <CompareList repositories={repositories} onDelete={this.removeRepo} />
       </Container>
     );
   }
